@@ -1,6 +1,6 @@
 Package: thierrytools
 Title: Some additional tools to work on mycobiome data
-Version: 0.0.0.9010
+Version: 1.0.0
 Authors@R: 
     person(given = "Thierry",
            family = "Rolling",
