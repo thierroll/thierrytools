@@ -31,7 +31,7 @@ read.blastn.unite <- function(tax.file="asv_seqs.fasta.unite.txt",tax_table=TRUE
   t$Genus=stringr::str_remove(t$Genus,"g__")
   t$Species=stringr::str_remove(t$Species,"s__")
   t$Species=stringr::str_replace(t$Species,"_"," ")
-  t=t%>% filter(grepl(" sp",Species)==F) %>%
+  t=t%>%
     mutate(otu=qseqid,
            otu.number=as.numeric(stringr::str_extract(otu,"(?<=ASV_)[0-9]+"))) %>%
     group_by(otu,Species)%>%
