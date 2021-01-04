@@ -37,8 +37,9 @@ read.blastn.unite <- function(tax.file="asv_seqs.fasta.unite.txt",tax_table=TRUE
     group_by(otu,Species)%>%
     mutate(occurence.sp=n())%>%
     ungroup()%>%
+    mutate(genuslevel=grepl(" sp",Species))%>%
     group_by(otu) %>%
-    arrange(evalue,desc(occurence.sp)) %>%
+    arrange(evalue,genuslevel,desc(occurence.sp)) %>%
     filter(!duplicated(taxonomy)) %>%
     mutate(evalue.rank=dense_rank(evalue)) %>%
     select(otu,Phylum,Family,Species,evalue,evalue.rank,occurence.sp,pident,length,everything())
