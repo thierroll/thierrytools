@@ -104,12 +104,12 @@ get.fungal.palette.unite <- function (tax, parapsilosis=FALSE) {
 
   saccharo <- tax.dict$Order == "Saccharomycetales"
   tax.dict$color[saccharo] <- rep(yingtools2::shades("#F0C3C3", variation = 0.4), length.out = sum(saccharo))
-  candida_group=c("Candida albicans","Candida orthopsilosis","Candida metapsilosis","Candida tropicalis","Candida dubliniensis")
+  candida_group=c("Candida albicans","Candida tropicalis","Candida dubliniensis")
   candida <- tax.dict$Species %in%candida_group
   tax.dict$color[candida] <- rep(yingtools2::shades("#DE0000", ncolor=6,variation = 0.6), length.out = sum(candida))
   parapsilosis <- grepl("ASV",tax.dict$Species)
   tax.dict$color[parapsilosis] <- rep(yingtools2::shades("#F5990F", ncolor=6, variation = 0.6),length.out=sum(parapsilosis))
-  parapsilosis1 <- grepl("parapsilosis",tax.dict$Species)
+  parapsilosis1 <- grepl("parapsilosis|orthopsilosis|metapsilosis",tax.dict$Species)
   tax.dict$color[parapsilosis1] <- rep(yingtools2::shades("#F5990F", ncolor=6, variation = 0.6),length.out=sum(parapsilosis1))
   sc <- tax.dict$Species == "Saccharomyces cerevisiae"
   tax.dict$color[sc] <- rep("#756EAC")
