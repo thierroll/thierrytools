@@ -89,28 +89,34 @@ get.fungal.palette.unite <- function (tax, parapsilosis=FALSE) {
   tax.dict <- tax[, ranks] %>% distinct()
   tax.dict$color <- rep(yingtools2::shades("gray", variation=0.25),length.out = nrow(tax.dict))
   basidio <- tax.dict$Phylum == "Basidiomycota"
-  tax.dict$color[basidio] <- rep(yingtools2::shades("#C48C66", variation = 0.4), length.out = sum(basidio))
+  tax.dict$color[basidio] <- rep(yingtools2::shades("#C48C66", variation = 0.25), length.out = sum(basidio))
   malassezia <- tax.dict$Genus == "Malassezia"
-  tax.dict$color[malassezia] <- rep(yingtools2::shades("#8A3030", variation = 0.6), length.out = sum(malassezia))
+  tax.dict$color[malassezia] <- rep(yingtools2::shades("#8A3030", variation = 0.25), length.out = sum(malassezia))
   molds <- c("Arthoniomycetes","Coniocybomycetes","Dothideomycetes",
              "Eurotiomycetes","Geoglossomycetes","Laboulbeniomycetes",
              "Lecanoromycetes","Leotiomycetes","Lichinomycetes","Orbiliomycetes",
              "Pezizomycetes","Sordariomycetes","Xylonomycetes")
   mold_group <- tax.dict$Class %in% molds
-  tax.dict$color[mold_group] <- rep(yingtools2::shades("#ADDADA",variation=0.4),length.out=sum(mold_group))
+  tax.dict$color[mold_group] <- rep(yingtools2::shades("#ADDADA",variation=0.25),length.out=sum(mold_group))
 
   aspergillus <- tax.dict$Genus == "Aspergillus"
-  tax.dict$color[aspergillus] <- rep(yingtools2::shades("#3F8D3D", variation = 0.4), length.out = sum(aspergillus))
+  tax.dict$color[aspergillus] <- rep(yingtools2::shades("#3F8D3D", variation = 0.25), length.out = sum(aspergillus))
 
   saccharo <- tax.dict$Order == "Saccharomycetales"
-  tax.dict$color[saccharo] <- rep(yingtools2::shades("#F0C3C3", variation = 0.4), length.out = sum(saccharo))
+  tax.dict$color[saccharo] <- rep(yingtools2::shades("#F0C3C3", variation = 0.25), length.out = sum(saccharo))
   candida_group=c("Candida albicans","Candida tropicalis","Candida dubliniensis")
   candida <- tax.dict$Species %in%candida_group
-  tax.dict$color[candida] <- rep(yingtools2::shades("#DE0000", ncolor=6,variation = 0.6), length.out = sum(candida))
+  tax.dict$color[candida] <- rep(yingtools2::shades("#DE0000", ncolor=3,), length.out = sum(candida))
   parapsilosis <- grepl("ASV",tax.dict$Species)
   tax.dict$color[parapsilosis] <- rep(yingtools2::shades("#F5990F", ncolor=6, variation = 0.6),length.out=sum(parapsilosis))
   parapsilosis1 <- grepl("parapsilosis|orthopsilosis|metapsilosis",tax.dict$Species)
-  tax.dict$color[parapsilosis1] <- rep(yingtools2::shades("#F5990F", ncolor=6, variation = 0.6),length.out=sum(parapsilosis1))
+  tax.dict$color[parapsilosis1] <- rep(yingtools2::shades("#F5990F", ncolor=6),length.out=sum(parapsilosis1))
+  meyerozyma <- grepl("Meyerozyma",tax.dict$Species)
+  tax.dict$color[medical.yeast] <- rep(yingtools2::shades("plum3", ncolor=2))
+  krusei <- grepl("Issatchenkia orienatlis",tax.dict$Species)
+  tax.dict$color[krusei] <- rep(yingtools2::shades("violetred2", ncolor=2))
+  glabrata <- grepl("glabrata|Nakaseomyces",tax.dict$Species)
+  tax.dict$color[glabrata] <- rep(yingtools2::shades("maroon", variation=0.5))
   sc <- tax.dict$Species == "Saccharomyces cerevisiae"
   tax.dict$color[sc] <- rep("#756EAC")
   tax.palette <- structure(tax.dict$color, names = as.character(tax.dict$Species))
