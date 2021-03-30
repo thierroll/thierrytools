@@ -112,7 +112,7 @@ get.fungal.palette.unite <- function (tax, parapsilosis=FALSE) {
   parapsilosis1 <- grepl("parapsilosis|orthopsilosis|metapsilosis",tax.dict$Species)
   tax.dict$color[parapsilosis1] <- rep(yingtools2::shades("#F5990F", ncolor=6),length.out=sum(parapsilosis1))
   meyerozyma <- grepl("Meyerozyma",tax.dict$Species)
-  tax.dict$color[medical.yeast] <- rep(yingtools2::shades("plum3", ncolor=2))
+  tax.dict$color[meyerozyma] <- rep(yingtools2::shades("plum3", ncolor=2))
   krusei <- grepl("Issatchenkia orienatlis",tax.dict$Species)
   tax.dict$color[krusei] <- rep(yingtools2::shades("violetred2", ncolor=2))
   glabrata <- grepl("glabrata|Nakaseomyces",tax.dict$Species)
