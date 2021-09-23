@@ -57,6 +57,55 @@ read.blastn.unite <- function(tax.file="asv_seqs.fasta.unite.txt",tax_table=TRUE
 }
 
 
+#' Reads in a NT taxonomy table
+#'
+#' This function is adapted from \code{yingtools2::read.blastn.file} . It allows reading in a taxonomic annotation file blasted to NT.
+#' The top hit is chosen first by evalue (lowest evalue), if several hits with same evalue, the Species with the highest
+#' number of hits is chosen.
+#'
+#'
+#'
+#' @param tax.file The output file from blasting the ASV table to the NT database. Default is \code{"asv_seqs.fasta.nt.txt"}
+#' @param tax_table logical, if \code{TRUE} (default), will return a data frame of taxonomy with top hit, ready to be converted to a tax_table, if \code{FALSE}, returns all hits
+#' @return Taxonomy table data frame
+#' @author Thierry Rolling
+#' @export
+
+read.blastn.nt <- function(tax.file="asv_seqs.fasta.unite.txt",tax_table=TRUE) {
+  requireNamespace("data.table",quietly=TRUE)
+  requireNamespace("tidyr",quietly = TRUE)
+  requireNamespace("stringr",quietly=TRUE)
+  requireNamespace("data.table",quietly = TRUE)
+  #tax.file="uparse/total.5.repset.fasta.blastn.refseq_rna.txt";tax_table=TRUE;blastn.data=FALSE
+  t <- data.table::fread(tax.file,quote="") %>% tbl_df()
+  ranklevels=c("Superkingdom","Kingdom","Subkingdom","Superphylum","Phylum","Subphylum","Superclass","Class","Subclass","Infraclass","Superorder","Order","Suborder","Infraorder","Parvorder","Superfamily","Family","Subfamily","Tribe","Subtribe","Genus","Subgenus","Species.group","Species.subgroup","Species","Subspecies","Varietas","Forma")
+  t=t%>%mutate(taxonomy=gsub("\\[[a-z ]+\\]","",taxonomy))%>%
+    separate(taxonomy, into=ranklevels,sep="\\|",remove=F)%>%
+    mutate(otu=qseqid,
+           otu.number=as.numeric(stringr::str_extract(otu,"(?<=ASV_)[0-9]+"))) %>%
+    group_by(otu,Species)%>%
+    mutate(occurence.sp=n())%>%
+    ungroup()%>%
+    mutate(genuslevel=grepl(" sp|uncultured|fungal",Species))%>%
+    group_by(otu) %>%
+    arrange(evalue,genuslevel,desc(occurence.sp)) %>%
+    filter(!duplicated(taxonomy)) %>%
+    mutate(evalue.rank=dense_rank(evalue)) %>%
+    select(otu,Phylum,Family,Species,evalue,evalue.rank,occurence.sp,pident,length,everything())
+  if (!tax_table) {
+    t <- t %>% ungroup() %>% arrange(otu.number)
+  } else {
+    t <- t %>%
+      # mutate(n.ties=sum(dense_rank(evalue)==1),blast.data=paste0(Species," (eval=",evalue,",pid=",pident,")",collapse=";")) %>%
+      filter(row_number()==1) %>%
+      ungroup() %>%
+      arrange(otu.number) %>%
+      select(otu,evalue,pident,Species, Kingdom, Class, Order, Family, Genus,Phylum)
+  }
+  return(t)
+}
+
+
 
 #' Creates a color palette based on fungal taxonomy
 #'
